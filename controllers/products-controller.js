@@ -1,4 +1,4 @@
-const { request } = require("../app");
+const { request, all } = require("../app");
 
 const myProductsList = async (req, res, next) => {
     // get my product lists
@@ -28,7 +28,7 @@ const bachatgatProduct = async (req, res, next) => {
     })
 };
 
-const kvkProducts = async (req, res, next) => {
+const bhajipalaProducts = async (req, res, next) => {
     // get my kvkProducts lists
     let sql = `select * from kvk_product`;
     db.query(sql, function (err, data, fields) {
@@ -56,9 +56,9 @@ const selectCategory = async (req, res, next) => {
 
 const selectProductCat = async (req, res, next) => {
     // get my category lists
-    const productType = request.body.productType;
+    const productType = req.body.producttype;
     if (productType) {
-        let sql = `select cat from category where type=${productType}`;
+        let sql = `select cat from category where type='${productType}'`;
         db.query(sql, function (err, data, fields) {
             if (err) throw err;
             res.json({
@@ -74,9 +74,9 @@ const selectProductCat = async (req, res, next) => {
 
 const selectProductVariety = async (req, res, next) => {
     // get my variety lists
-    const productType = request.body.productType;
-    if (productType) {
-        let sql = `select variety from category where type=${productType}`;
+    const catType = req.body.cattype;
+    if (catType) {
+        let sql = `select variety from category where cat='${catType}'`;
         db.query(sql, function (err, data, fields) {
             if (err) throw err;
             res.json({
@@ -86,16 +86,40 @@ const selectProductVariety = async (req, res, next) => {
             })
         })
     } else {
-        res.status(200).json({ message: "Please select product type" })
+        res.status(200).json({ message: "Please select product category" })
     }
 };
+
+const serachProduct = async (req, res, next) => {
+    // get product search lists. types: all, crop, animal, plant, vegitable
+    const searchproduct = req.body.searchproduct;
+    if (searchproduct) {
+        let sql = "";
+        if(searchproduct === "all"){
+            sql = `SELECT * from products where status='1'`;
+        }else{
+            sql = `SELECT * from products where product_cat='${searchproduct}' AND status='1'`;
+        }
+        
+        db.query(sql, function (err, data, fields) {
+            if (err) throw err;
+            res.json({
+                status: 200,
+                data,
+                message: "product list successfully"
+            })
+        })
+    } else {
+        res.status(200).json({ message: "Please select search product category" })
+    }
+}
 
 const addProducts = async (req, res, next) => {
     const product_cat = req.body.product_cat;
     const product_name = req.body.product_name;
     const product_desc = req.body.product_desc;
     const product_rate = req.body.product_rate;
-    const itemName = req.body.itemName; //image upload here
+    const itemName = req.body.imagename; //image upload here
     const path = "";
     const addDate = new Date();
     const user_id = req.body.user_id;
@@ -104,7 +128,7 @@ const addProducts = async (req, res, next) => {
     const status = "0";
     const category = req.body.category;
     const variety = req.body.variety;
-    const district = req.body.district;
+    const district = req.body.district || "";
 
     // get my add products lists
 
@@ -126,9 +150,10 @@ const addProducts = async (req, res, next) => {
 module.exports = {
     myProductsList,
     bachatgatProduct,
-    kvkProducts,
+    bhajipalaProducts,
     selectCategory,
     selectProductCat,
     selectProductVariety,
+    serachProduct,
     addProducts
 }
