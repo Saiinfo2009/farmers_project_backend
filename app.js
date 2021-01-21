@@ -3,6 +3,7 @@ const body_parser = require('body-parser');
 const mysql = require('mysql');
 const userRoutes = require('./routes/user-routes');
 const productRoutes = require('./routes/product-routes');
+const adviceRoutes = require('./routes/advice-routes');
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(body_parser.json())
 
 app.use('/api/user/', userRoutes)
 app.use('/api/product/', productRoutes)
+app.use('/api/advice/', adviceRoutes)
 
 db = mysql.createConnection({
     host: 'localhost',

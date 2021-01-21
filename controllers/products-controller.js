@@ -1,8 +1,5 @@
-const { request, all } = require("../app");
-
 const myProductsList = async (req, res, next) => {
     // get my product lists
-
     const mobileno = req.headers.mobileno;
     let sql = `SELECT * from products where mobile=${mobileno}`;
     db.query(sql, function (err, data, fields) {
