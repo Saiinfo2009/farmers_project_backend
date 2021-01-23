@@ -70,8 +70,13 @@ const districtVillageData = async (req, res, next) => {
     }
 };
 
+const hello = async (req, res, next) => {
+
+};
+
 module.exports = {
     createFarmer,
     stateDistrictData,
-    districtVillageData
+    districtVillageData,
+    hello
 }
