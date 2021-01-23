@@ -136,9 +136,9 @@ const addProducts = async (req, res, next) => {
 
     db.query(sql, [values], function (err, result) {
         if (err) throw err;
+        console.log("Number of records inserted: " + result.affectedRows);
         res.json({
             status: 200,
-            data,
             message: "recored added successfully"
         })
     })
