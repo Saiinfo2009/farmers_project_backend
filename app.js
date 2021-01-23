@@ -21,7 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 //file upload code
 app.use(fileUpload.array('image', 1));
 app.use('/img', express.static(path.join(__dirname, 'img')));
-
 app.use('/api/user/', userRoutes);
 app.use('/api/product/', productRoutes);
 app.use('/api/advice/', adviceRoutes);
