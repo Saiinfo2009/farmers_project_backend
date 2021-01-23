@@ -9,6 +9,6 @@ router.get('/bhajipalaproducts', productsController.selectCategory);
 router.post('/selectproductCat', productsController.selectProductCat);
 router.post('/selectproductVariety', productsController.selectProductVariety);
 router.post('/serachproduct', productsController.serachProduct);
-
+router.post('/addProducts', productsController.addProducts);
 
 module.exports = router;

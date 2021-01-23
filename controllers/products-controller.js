@@ -1,9 +1,19 @@
+const moment = require('moment');
+
 const myProductsList = async (req, res, next) => {
     // get my product lists
     const mobileno = req.headers.mobileno;
     let sql = `SELECT * from products where mobile=${mobileno}`;
     db.query(sql, function (err, data, fields) {
         if (err) throw err;
+
+        for (let i in data) {
+            if (data[i].status == 0) {
+                data[i].status = "Pending for approval.";
+            } else {
+                data[i].status = "Approved";
+            }
+        }
         res.json({
             status: 200,
             data,
@@ -92,12 +102,12 @@ const serachProduct = async (req, res, next) => {
     const searchproduct = req.body.searchproduct;
     if (searchproduct) {
         let sql = "";
-        if(searchproduct === "all"){
+        if (searchproduct === "all") {
             sql = `SELECT * from products where status='1'`;
-        }else{
+        } else {
             sql = `SELECT * from products where product_cat='${searchproduct}' AND status='1'`;
         }
-        
+
         db.query(sql, function (err, data, fields) {
             if (err) throw err;
             res.json({
@@ -112,35 +122,70 @@ const serachProduct = async (req, res, next) => {
 }
 
 const addProducts = async (req, res, next) => {
-    const product_cat = req.body.product_cat;
-    const product_name = req.body.product_name;
-    const product_desc = req.body.product_desc;
-    const product_rate = req.body.product_rate;
-    const itemName = req.body.imagename; //image upload here
-    const path = "";
-    const addDate = new Date();
-    const user_id = req.body.user_id;
-    const mobileno = req.body.mobileno;
-    const fname = req.body.fname;
-    const status = "0";
-    const category = req.body.category;
-    const variety = req.body.variety;
-    const district = req.body.district || "";
-
-    // get my add products lists
-
-    let sql = "insert into products(product_cat, product_name, product_desc, product_rate, path, date, user_id, mobile, seller_name, status, category, variety, district) VALUES ?";
-    var values = [
-        [product_cat, product_name, product_desc, product_rate, path, addDate, user_id, mobileno, fname, status, category, variety, district]
-    ];
-
-    db.query(sql, [values], function (err, result) {
-        if (err) throw err;
-        console.log("Number of records inserted: " + result.affectedRows);
-        res.json({
-            status: 200,
-            message: "recored added successfully"
+    const mobileno = req.headers.mobileno;
+    if (!mobileno) {
+        return res.json({
+            status: 422,
+            message: "Invalide request"
         })
+    }
+
+    let farmersql = `SELECT * from farmer_registration where mob_no='${mobileno}' AND status=1`;
+    console.log(farmersql)
+    db.query(farmersql, function (err, data, fields) {
+        if (err) throw err;
+
+        let farmerName = "";
+        let user_id = "";
+        let district = "";
+
+        if (data.length > 0) {
+            farmerName = data[0].fname + " " + data[0].lname;
+            user_id = data[0].user_id;
+            district = data[0].city1;
+
+            let path = "";
+            //image upload code
+            // 'image' is the name of our file input field in the HTML form
+            // req.file contains information of uploaded file
+            // req.body contains information of text fields, if there were any
+            if (req.fileValidationError) {
+                return res.send(req.fileValidationError);
+            } else if (req.files.length == 0) {
+                return res.send('Please select an image to upload');
+            } else {
+                path = req.files[0].filename; //img name
+            }
+
+            const product_cat = req.body.select_category || "";
+            const category = req.body.select_product || "";
+            const variety = req.body.select_variety || "";
+            const quantity = req.body.quantity || ""; //is refer as qty
+            const product_desc = req.body.product_desc || "";
+            const product_rate = req.body.product_rate || "";
+            const addDate = moment().format('DD-MM-yyyy HH:mm:ss');
+            const status = "0";
+
+            // get my add products lists
+            let sql = "insert into products(product_cat, product_name, product_desc, product_rate, path, date, user_id, mobile, seller_name, status, category, variety, district) VALUES ?";
+            var values = [
+                [product_cat, quantity, product_desc, product_rate, path, addDate, user_id, mobileno, farmerName, status, category, variety, district]
+            ];
+
+            db.query(sql, [values], function (err, result) {
+                if (err) throw err;
+                console.log("Number of records inserted: " + result.affectedRows);
+                res.json({
+                    status: 200,
+                    message: "recored added successfully"
+                })
+            })
+        }else{
+            res.json({
+                status: 422,
+                message: "Invalid user"
+            })
+        }
     })
 };
 

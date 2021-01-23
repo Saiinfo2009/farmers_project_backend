@@ -1,16 +1,14 @@
 const multer = require('multer');
+const path = require('path');
 const helpers = require('../helper');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log("in middleware",req)
         cb(null, 'img');
     },
-
     // By default, multer removes file extensions so let's add them back
     filename: function (req, file, cb) {
-        console.log("in middleware:",file)
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
     }
 });
 
