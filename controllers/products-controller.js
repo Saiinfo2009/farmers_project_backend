@@ -181,9 +181,7 @@ const addProducts = async (req, res, next) => {
             // req.body contains information of text fields, if there were any
             if (req.fileValidationError) {
                 return res.send(req.fileValidationError);
-            } else if (req.files.length == 0) {
-                return res.send('Please select an image to upload');
-            } else {
+            } else if (req.files.length > 0) {
                 path = req.files[0].filename; //img name
             }
 
