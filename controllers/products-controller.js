@@ -161,7 +161,6 @@ const addProducts = async (req, res, next) => {
     }
 
     let farmersql = `SELECT * from farmer_registration where mob_no='${mobileno}' AND status=1`;
-    console.log(farmersql)
     db.query(farmersql, function (err, data, fields) {
         if (err) throw err;
 
@@ -202,7 +201,6 @@ const addProducts = async (req, res, next) => {
 
             db.query(sql, [values], function (err, result) {
                 if (err) throw err;
-                console.log("Number of records inserted: " + result.affectedRows);
                 res.json({
                     status: 200,
                     message: "recored added successfully"

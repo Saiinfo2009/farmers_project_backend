@@ -40,8 +40,6 @@ const discussionForum = async (req, res, next) => {
 };
 
 const askAdvice = async (req, res, next) => {
-    console.log(req.body)
-    console.log(req.files)
     // add ask Advice
     const mobileno = req.headers.mobileno;
     let img = "";
