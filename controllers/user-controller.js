@@ -4,7 +4,7 @@ const moment = require('moment');
 const createFarmer = async (req, res, next) => {
     // create farmer registration
     if (req.body.fname && req.body.lname && req.body.email_id && req.body.mobileno
-        && req.body.pincode && req.body.pass && req.body.city && req.body.state && req.body.city1 && req.body.village) {
+        && req.body.pincode && req.body.city && req.body.state && req.body.city1 && req.body.village) {
 
         const fname = req.body.fname || "";
         const lname = req.body.lname || "";
