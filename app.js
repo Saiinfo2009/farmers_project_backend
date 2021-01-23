@@ -39,8 +39,10 @@ db = mysql.createConnection({
 db.connect(function (err) {
     if (err){
         console.log("Connected to database");
+    }else{
+        console.log("Connected to database");
     }
-    console.log("Connected to database");
+    
     app.listen(port);
 })
 
