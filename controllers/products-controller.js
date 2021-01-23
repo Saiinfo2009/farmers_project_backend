@@ -128,6 +128,36 @@ const addProducts = async (req, res, next) => {
             status: 422,
             message: "Invalide request"
         })
+    } else if (!req.body.select_category) {
+        return res.json({
+            status: 422,
+            message: "Please select category"
+        })
+    } else if (!req.body.select_product) {
+        return res.json({
+            status: 422,
+            message: "Please select product"
+        })
+    } else if (!req.body.select_variety) {
+        return res.json({
+            status: 422,
+            message: "Please select variety"
+        })
+    } else if (!req.body.quantity) {
+        return res.json({
+            status: 422,
+            message: "Please enter quantity"
+        })
+    } else if (!req.body.product_desc) {
+        return res.json({
+            status: 422,
+            message: "Please enter product description"
+        })
+    } else if (!req.body.product_rate) {
+        return res.json({
+            status: 422,
+            message: "Please enter product rate amount"
+        })
     }
 
     let farmersql = `SELECT * from farmer_registration where mob_no='${mobileno}' AND status=1`;
@@ -180,7 +210,7 @@ const addProducts = async (req, res, next) => {
                     message: "recored added successfully"
                 })
             })
-        }else{
+        } else {
             res.json({
                 status: 422,
                 message: "Invalid user"

@@ -46,21 +46,34 @@ const askAdvice = async (req, res, next) => {
     const mobileno = req.headers.mobileno;
     let img = "";
     //image upload code
-
     // 'image' is the name of our file input field in the HTML form
     // req.file contains information of uploaded file
     // req.body contains information of text fields, if there were any
     if (req.fileValidationError) {
         return res.send(req.fileValidationError);
-    } else if (req.files.length == 0) {
-        return res.send('Please select an image to upload');
-    } else {
+    } else if (req.files.length > 0) {
         img = req.files[0].filename; //img name
-        console.log(req.files[0].path)
     }
 
     // Display uploaded image for user validation
     const advice_date = moment().format('DD-MM-yyyy HH:mm:ss');
+    if (!req.body.que_type) {
+        return res.json({
+            status: 422,
+            message: "Please select question type"
+        })
+    } else if (!req.body.crop_animal_name) {
+        return res.json({
+            status: 422,
+            message: "Please add crop or animal name"
+        })
+    } else if (!req.body.crop_animal_name) {
+        return res.json({
+            status: 422,
+            message: "Please add crop or animal name"
+        })
+    }
+
     const que_type = req.body.que_type || "";
     const crop_name = req.body.crop_animal_name || "";
     const question = req.body.question || "";
@@ -80,7 +93,6 @@ const askAdvice = async (req, res, next) => {
 
     db.query(sql, [values], function (err, result) {
         if (err) throw err;
-        console.log("Number of records inserted: " + result.affectedRows);
         res.json({
             status: 200,
             message: "recored added successfully"
