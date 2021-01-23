@@ -71,7 +71,10 @@ const districtVillageData = async (req, res, next) => {
 };
 
 const hello = async (req, res, next) => {
-
+    res.json({
+        status: 200,
+        message: "Hello app"
+    })
 };
 
 module.exports = {
