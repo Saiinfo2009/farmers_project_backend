@@ -37,7 +37,13 @@ db = mysql.createConnection({
 });
 
 db.connect(function (err) {
-    if (err) throw err;
+    // if (err) throw err;
+    if (err){
+        res.json({
+            status: 500,
+            message: "Database not connected"
+        })
+    }
     console.log("Connected to database");
     app.listen(port);
 })
